@@ -75,7 +75,7 @@ router.post('/scripts',async (req,res)=>{
         const records = new User(req.body);
         // console.log(req.body);
         const recordInfo = await records.save();
-        res.send("Registration Successful");
+        res.send(recordInfo);
     }catch(e){
         res.send(e);
     }

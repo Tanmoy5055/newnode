@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const uniqueValidator = require('mongoose-unique-validator');
 
 const userSchema = new mongoose.Schema({
     email: {
         type: String,
-        lowercase: true
+        lowercase: true,
+        unique: true
     },
     fname: {
         type: String,
@@ -25,6 +27,8 @@ const userSchema = new mongoose.Schema({
         }
     ]
 });
+
+userSchema.plugin(uniqueValidator);
 
 //mongoose hook | password encryption
 userSchema.pre('save', async function (next) {
