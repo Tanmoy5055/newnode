@@ -18,9 +18,9 @@ mongoose.connect(db, {
         console.log('DB connected Successfully')
     }
 });
-console.log(__dirname);
+// console.log(__dirname);
 
-console.log(path.join(__dirname, 'views'));
+// console.log(path.join(__dirname, 'views'));
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

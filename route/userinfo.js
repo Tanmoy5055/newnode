@@ -3,12 +3,13 @@ const User = require('../model/user');
 const router = express.Router();
 
 router.get('/', function (req, res) {
-    res.render('dashboard');
+    res.render('home');
 });
 
 router.get('/dashboard', function (req, res) {
     res.render('dashboard');
 });
+
 
 router.get('/login', (req,res)=>{
     res.render('login');
@@ -67,4 +68,61 @@ router.post('/signup', async (req, res) => {
         })
 })
 
+
+router.post('/scripts',async (req,res)=>{
+    try{
+        const records = new User(req.body);
+        // console.log(req.body);
+        const recordInfo= await records.save();
+        res.status(201).send("Registration Successful");
+    }catch(e){
+        res.status(400).send(e);
+        res.send(e);
+    }
+});
+
+router.get('/scripts',async (req,res)=>{
+    try{
+      const getinfos =await User.find();
+    //   console.log(getinfos);
+        res.status(201).send(getinfos);
+    }catch(e){
+        res.status(400).send(e);
+    }
+});
+
+router.get('/scripts/:id',async (req,res)=>{
+    try{
+      const _id = req.params.id
+      const getData = await User.findById(_id);
+    //   console.log(getinfo);
+        res.send(getData);
+    }catch(e){
+        res.status(400).send(e);
+    }
+});
+
+router.patch('/scripts/:id',async (req,res)=>{
+    try{
+      const _id = req.params.id
+      const getData = await User.findByIdAndUpdate(_id,req.body,{
+          new:true
+      });
+    //   console.log(getinfo);
+        res.send(getData);
+    }catch(e){
+        res.status(500).send(e);
+    }
+});
+
+router.delete('/scripts/:id',async (req,res)=>{
+    try{
+      const _id = req.params.id
+      const getData = await User.findByIdAndDelete(_id);
+    //   console.log(getinfo);
+        res.send(getData);
+    }catch(e){
+        res.status(500).send(e);
+    }
+});
 module.exports = router;
