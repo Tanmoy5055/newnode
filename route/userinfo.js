@@ -39,6 +39,7 @@ router.post('/login', async function (req, res) {
         }
     }
     });
+
 router.get('/signup', (req,res)=> {
     res.render('signup');
 });
@@ -73,21 +74,19 @@ router.post('/scripts',async (req,res)=>{
     try{
         const records = new User(req.body);
         // console.log(req.body);
-        const recordInfo= await records.save();
-        res.status(201).send("Registration Successful");
+        const recordInfo = await records.save();
+        res.send("Registration Successful");
     }catch(e){
-        res.status(400).send(e);
         res.send(e);
     }
 });
 
 router.get('/scripts',async (req,res)=>{
     try{
-      const getinfos =await User.find();
-    //   console.log(getinfos);
-        res.status(201).send(getinfos);
+      const getinfos = await User.find();
+        res.send(getinfos);
     }catch(e){
-        res.status(400).send(e);
+        res.send(e);
     }
 });
 
@@ -95,10 +94,9 @@ router.get('/scripts/:id',async (req,res)=>{
     try{
       const _id = req.params.id
       const getData = await User.findById(_id);
-    //   console.log(getinfo);
         res.send(getData);
     }catch(e){
-        res.status(400).send(e);
+        res.send(e);
     }
 });
 
@@ -108,10 +106,9 @@ router.patch('/scripts/:id',async (req,res)=>{
       const getData = await User.findByIdAndUpdate(_id,req.body,{
           new:true
       });
-    //   console.log(getinfo);
         res.send(getData);
     }catch(e){
-        res.status(500).send(e);
+        res.send(e);
     }
 });
 
@@ -120,9 +117,9 @@ router.delete('/scripts/:id',async (req,res)=>{
       const _id = req.params.id
       const getData = await User.findByIdAndDelete(_id);
     //   console.log(getinfo);
-        res.send(getData);
+        res.send("Record Deleted");
     }catch(e){
-        res.status(500).send(e);
+        res.send(e);
     }
 });
 module.exports = router;
