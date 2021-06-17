@@ -50,6 +50,9 @@
                     if(data.error){
                         result.textContent = data.error
                     }
+                    if(data.alert){
+                        result.textContent = data.alert
+                    }
             }catch (error) {
                 console.log(error);
             }

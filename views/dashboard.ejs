@@ -5,15 +5,18 @@
             <h3>Your Information</h3>
             <div class="form-group">
                 <p>Firstname</p>
-                <input type="text" class="form-control" name="fname" readonly>
+                <input type="text" class="form-control fname" name="fname" readonly>
+                <!-- <div class="fname"></div> -->
             </div>
             <div class="form-group">
                 <p>Lastname</p>
-                <input type="text" class="form-control" name="lname" readonly>
+                <input type="text" class="form-control lname" name="lname" readonly>
+                <!-- <div class="lname"></div> -->
             </div>
             <div class="form-group">
                 <p>Email</p>
-                <input type="text" class="form-control" name="email" readonly>
+                <input type="text" class="form-control email" name="email" readonly>
+                <!-- <div class="email"></div> -->
             </div>
             <!-- <div class="form-group">
                 <input type="password" class="form-control" name="password" readonly>
@@ -28,35 +31,56 @@
     <%- include('partials/footer') -%>
 
 
-<script>
+        <script>
 
-    const form = document.querySelector('form');
-    const result = document.querySelector('.result');
+            const form = document.querySelector('form');
+            const fname = document.querySelector('.fname');
+            const lname = document.querySelector('.lname');
+            const email = document.querySelector('.email');
+            const result = document.querySelector('.result');
 
-    form.addEventListener('submit', async (e)=>{
-        e.preventDefault();
-
-        result.textContent = '';
-
-        const fname = form.fname.value;
-        const lname = form.fname.value;
-        const email = form.email.value;
-        
-        try {
-                const response = await fetch('/signup', {
-                    method: 'POST',
-                    body: JSON.stringify({fname,lname,email}),
-                    headers: {'Content-Type' : 'application/json'}
-                });
-                const data = await response.json();
-                    if(data.success){
-                        result.textContent = data.success
-                    }
-                    if(data.error){
-                        result.textContent = data.error
+            try {
+                // const response = await fetch('/dashboard', {
+                //     method: 'POST',
+                //     body: JSON.stringify({fname,lname,email}),
+                //     headers: {'Content-Type' : 'application/json'}
+                // });
+                const data = response.json();
+                    if(data.fname){
+                        fname.textContent = data.fname;
+                        // lname.textContent = data.getData.lname;
+                        // email.textContent = data.getData.email;
                     }
             }catch (error) {
                 console.log(error);
             }
-        });
-    </script>
+
+
+            
+    // form.addEventListener('submit', async (e)=>{
+    //     e.preventDefault();
+
+    //     result.textContent = '';
+
+    //     const fname = form.fname.value;
+    //     const lname = form.fname.value;
+    //     const email = form.email.value;
+
+    //     try {
+    //             const response = await fetch('/signup', {
+    //                 method: 'POST',
+    //                 body: JSON.stringify({fname,lname,email}),
+    //                 headers: {'Content-Type' : 'application/json'}
+    //             });
+    //             const data = await response.json();
+    //                 if(data.success){
+    //                     result.textContent = data.success
+    //                 }
+    //                 if(data.error){
+    //                     result.textContent = data.error
+    //                 }
+    //         }catch (error) {
+    //             console.log(error);
+    //         }
+    //     });
+        </script>

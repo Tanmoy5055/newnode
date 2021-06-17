@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const uniqueValidator = require('mongoose-unique-validator');
+const jwt = require('jsonwebtoken');
+
 
 const userSchema = new mongoose.Schema({
     email: {
@@ -44,12 +46,10 @@ userSchema.pre('save', async function (next) {
 //static keyword will be used when a model calls a method
 userSchema.statics.findUser = async function(email, password){
     const userSearch = await User.findOne({email});
-    // console.log(userSearch.password);
     if(!userSearch){
         throw new Error('Invalid Details');
     }
     const isMatch = await bcrypt.compare(password,userSearch.password);
-    // console.log(isMatch);
     if(!isMatch){
         throw new Error('Invalid Details');
     }
@@ -58,17 +58,17 @@ userSchema.statics.findUser = async function(email, password){
 
 //generating token
 //methods will be used when an instance will call a method
-// userSchema.methods.genAuthToken = async function(){
-//     const userTuple = this;
-//     // console.log(user);
-//     const token = await jwt.sign({
-//         _id: userTuple._id
-//     },'abc');
-//     // console.log(token);
-//     userTuple.tokens = userTuple.tokens.concat({token: token})
-//     await userTuple.save();
-//     return token;
-// }
+userSchema.methods.genAuthToken = async function(){
+    const userTuple = this;
+    // console.log(user);
+    const token = await jwt.sign({
+        _id: userTuple._id
+    },'abc');
+    // console.log(token);
+    userTuple.tokens = userTuple.tokens.concat({token: token})
+    await userTuple.save();
+    return token;
+}
 
 
 const User = mongoose.model('import', userSchema);
