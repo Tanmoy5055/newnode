@@ -5,6 +5,7 @@ const requireAuth = require('../middleware/user');
 const notRequireAuth = require('../middleware/log');
 const logAuth = require('../middleware/logauth');
 const checkUser = require('../middleware/checkuser');
+const bcrypt = require('bcrypt');
 
 
 router.get('*', checkUser);
@@ -27,15 +28,26 @@ router.post('/login', async function (req, res) {
     let password = (req.body.password);
 
     try {
-        const user = await User.findUser(email, password);
+        const userSearch = await User.findOne({ email: email });
+        // console.log(userSearch);
+        if (!userSearch) {
+            throw new Error('Invalid Details');
+        }
+        const isMatch = await bcrypt.compare(password, userSearch.password);
+        // console.log(isMatch);
+        if (!isMatch) {
+            throw new Error('Invalid Details');
+        }
         // creating token
-        const token = await user.genAuthToken();
+        const token = await userSearch.genAuthToken();
         res.cookie('jwt', token, {
             maxAge: 1000 * 60 * 60 * 24,
             httpOnly: true
         });
-        res.send({ success: user._id });
-        // res.redirect('/dashboard');
+        // res.send({ success: userSearch._id });
+        console.log("Login Successfull");
+        res.send({success:"Login Successfull"});
+
     } catch (err) {
         console.log(err.message);
         if (err.message == 'Invalid Details') {
@@ -72,44 +84,46 @@ router.post('/signup', async (req, res) => {
     }
 });
 
-
 //logout
-// router.get('/logout', requireAuth, async (req, res) => {
-//     try {
-//         // req.user.tokens = req.user.tokens.filter((token) => {
-//         //     return token.token !== req.token
-//         // })
-
-//         req.user.tokens = []
-//         await req.user.save()
-
-//         res.cookie('jwt', '', { maxAge: 1 });
-//         res.redirect('/login');
-//         // res.send()
-//     } catch (e) {
-//         res.status(500).send()
-//     }
-// })
-
 router.get('/logout', logAuth, async (req, res) => {
     try {
-        // req.test.tokens = req.test.tokens.filter((element) => {
-        //     return element.token !== req.token
-        // });
-        req.test.tokens = []
-        
+        req.test.tokens = req.test.tokens.filter((element) => {
+            return element.token !== req.token
+        });
+        // req.test.tokens = []
+
         // res.clearCookie('jwt');
+        res.cookie('jwt', '', { maxAge: 1 });
+
         await req.test.save();
 
-        res.cookie('jwt', '', { maxAge: 1 });
-        
+
         console.log("Logout Successfully");
+        res.send("Logout Successfully");
         res.redirect('/login');
 
     } catch (err) {
         console.log(err);
     }
-})
+});
+
+router.get('/logoutall', logAuth, async (req, res) => {
+    try{
+        req.test.tokens = [];
+
+        // res.clearCookie('jwt');
+        res.cookie('jwt', '', { maxAge: 1 });
+
+        await req.test.save();
+
+        console.log("Logout Successfully");
+
+        res.redirect('/login');
+
+    } catch(err) {
+        console.log(err);
+    }
+});
 
 //register using API
 router.post('/scripts', async (req, res) => {
